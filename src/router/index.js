@@ -16,6 +16,10 @@ const routes = [
 		path: '/contacts/:id',
 		name: 'ContactView',
 		component: Contact
+	},
+	{
+		path: '/',
+		redirect: '/contacts'
 	}
 ]
 

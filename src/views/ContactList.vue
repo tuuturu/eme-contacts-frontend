@@ -48,12 +48,8 @@ export default {
 		sort_type: byFirstName,
 		query: ''
 	}),
-	async created() {
-		await this.$store.dispatch('user/refresh')
-
-		if (!this.isAuthenticated) return
-
-		await this.$store.dispatch('contacts/refresh')
+	created() {
+		this.$store.dispatch('contacts/refresh')
 	}
 }
 </script>
