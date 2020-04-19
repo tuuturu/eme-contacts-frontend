@@ -1,6 +1,5 @@
 ### Build stage
 FROM node:lts-alpine AS build-stage
-ENV NODE_ENV production
 
 WORKDIR /build
 COPY package*.json ./
