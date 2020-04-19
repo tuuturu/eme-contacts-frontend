@@ -1,5 +1,10 @@
 <template>
 	<div class="Contact">
+		<div class="menu">
+			<IconDelete @click="deleteContact" />
+			<IconEdit />
+		</div>
+
 		<IconUser />
 
 		<h1>
@@ -7,13 +12,22 @@
 			<span class="age" v-if="contact.age">({{ contact.age }})</span>
 		</h1>
 
-		<div class="contact-property" v-if="contact.phone">
+		<div
+			class="contact-property"
+			v-for="number in ensureList(contact.phone)"
+			:key="number"
+		>
 			<IconCall class="icon" />
-			<p>{{ contact.phone }}</p>
+			<p>{{ sanitizePhone(number) }}</p>
 		</div>
-		<div class="contact-property" v-if="contact.email">
+
+		<div
+			class="contact-property"
+			v-for="email in ensureList(contact.email)"
+			:key="email"
+		>
 			<IconEmail class="icon" />
-			<p>{{ contact.email }}</p>
+			<p>{{ email }}</p>
 		</div>
 	</div>
 </template>
@@ -23,16 +37,64 @@ import { mapState } from 'vuex'
 import IconUser from '@/components/icons/IconUser'
 import IconEmail from '@/components/icons/IconEmail'
 import IconCall from '@/components/icons/IconCall'
+import IconDelete from '@/components/icons/IconDelete'
+import IconEdit from '@/components/icons/IconEdit'
+
+function ensureList(item) {
+	const items = []
+
+	if (!item) return items
+
+	if (item.indexOf(';') > -1) items.push(...item.split(';'))
+	else items.push(item)
+
+	return items
+}
+
+function sanitizePhone(number) {
+	let result = ''
+	number = number.replace(' ', '')
+
+	if (number.indexOf('+') > -1) {
+		result += number.substr(0, 3) + ' '
+		number = number.substr(3)
+	}
+
+	return (
+		result +
+		number.slice(0, 3) +
+		' ' +
+		number.slice(3, 6) +
+		' ' +
+		number.slice(6)
+	)
+}
 
 export default {
 	name: 'Contact',
-	components: { IconCall, IconEmail, IconUser },
+	components: { IconEdit, IconDelete, IconCall, IconEmail, IconUser },
 	computed: {
 		...mapState('contacts', ['contacts']),
 		contact() {
 			return this.contacts.find(
 				(contact) => contact.id === this.$route.params.id
 			)
+		}
+	},
+	data: () => ({
+		ensureList,
+		sanitizePhone
+	}),
+	methods: {
+		deleteContact() {
+			const full_name = `${this.contact.first_name} ${this.contact.last_name}`
+			const answer = confirm(`Are you sure you want to delete ${full_name}`)
+
+			if (!answer) return
+
+			this.$store.dispatch('contacts/deleteContact', { id: this.contact.id })
+
+			this.$router.push('/contacts')
 		}
 	}
 }
@@ -55,13 +117,26 @@ h1 {
 	width: 196px;
 }
 
+.menu {
+	width: 100%;
+	text-align: left;
+
+	display: flex;
+	justify-content: space-between;
+
+	svg {
+		margin: 0.5em;
+		cursor: pointer;
+	}
+}
+
 .age {
 	color: grey;
 }
 
 .icon {
-	height: 36px;
-	width: 36px;
+	height: 28px;
+	width: 28px;
 
 	margin-right: 1em;
 }

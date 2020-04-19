@@ -22,6 +22,11 @@ const actions = {
 		const { data } = await axios.get('/contacts')
 
 		commit('contacts', data)
+	},
+	async deleteContact({ dispatch }, { id }) {
+		await axios.delete(`/contacts/${id}`)
+
+		await dispatch('refresh')
 	}
 }
 

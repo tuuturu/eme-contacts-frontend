@@ -16,10 +16,15 @@ const routes = [
 		path: '/contacts/:id',
 		name: 'ContactView',
 		component: Contact
+	},
+	{
+		path: '/',
+		redirect: '/contacts'
 	}
 ]
 
 const router = new VueRouter({
+	mode: 'history',
 	routes
 })
 
