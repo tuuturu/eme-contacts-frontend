@@ -32,6 +32,11 @@ const actions = {
 		} catch (error) {} // expected when not logged in
 
 		commit('user', user)
+	},
+	async logout({ commit }) {
+		await axios.post('/logout')
+
+		commit('user', null)
 	}
 }
 
