@@ -1,7 +1,7 @@
 import Axios from 'axios'
 
 const axios = Axios.create({
-	baseURL: process.env.VUE_APP_UPSTREAM_URL,
+	baseURL: env.VUE_APP_UPSTREAM_URL,
 	withCredentials: true
 })
 

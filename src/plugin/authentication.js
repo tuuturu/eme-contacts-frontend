@@ -11,8 +11,8 @@ function install(Vue) {
 
 			if (!choice) return next()
 
-			const redirectURL = new URL(to.fullPath, process.env.VUE_APP_BASE_URL)
-			const url = new URL('/login', process.env.VUE_APP_GATEKEEPER_URL)
+			const redirectURL = new URL(to.fullPath, env.VUE_APP_BASE_URL)
+			const url = new URL('/login', env.VUE_APP_GATEKEEPER_URL)
 			url.search = new URLSearchParams({
 				redirect: redirectURL
 			}).toString()
