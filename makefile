@@ -2,8 +2,11 @@ NAME=`jq -r .name package.json`
 VERSION=`jq -r .version package.json`
 REPOSITORY=registry.develish.net
 
-run:
+run: run-dependencies
 	npm run serve
+
+run-dependencies:
+	docker-compose up -d
 
 run-in-docker:
 	docker stop contacts-frontend || true

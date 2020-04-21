@@ -1,4 +1,5 @@
 import store from '@/store'
+import config from '@/app.config'
 
 function install(Vue) {
 	Vue.mixin({
@@ -11,8 +12,8 @@ function install(Vue) {
 
 			if (!choice) return next()
 
-			const redirectURL = new URL(to.fullPath, env.VUE_APP_BASE_URL)
-			const url = new URL('/login', env.VUE_APP_GATEKEEPER_URL)
+			const redirectURL = new URL(to.fullPath, config.VUE_APP_BASE_URL)
+			const url = new URL('/login', config.VUE_APP_GATEKEEPER_URL)
 			url.search = new URLSearchParams({
 				redirect: redirectURL
 			}).toString()

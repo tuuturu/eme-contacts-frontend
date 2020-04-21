@@ -1,7 +1,8 @@
 import Axios from 'axios'
+import config from '@/app.config'
 
 const axios = Axios.create({
-	baseURL: env.VUE_APP_GATEKEEPER_URL,
+	baseURL: config.VUE_APP_GATEKEEPER_URL,
 	withCredentials: true
 })
 
