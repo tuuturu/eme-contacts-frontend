@@ -16,6 +16,7 @@
 			class="contact-property"
 			v-for="number in ensureList(contact.phone)"
 			:key="number"
+			@click="call(number)"
 		>
 			<IconCall class="icon" />
 			<p>{{ sanitizePhone(number) }}</p>
@@ -95,6 +96,11 @@ export default {
 			this.$store.dispatch('contacts/deleteContact', { id: this.contact.id })
 
 			this.$router.push('/contacts')
+		},
+		call(number) {
+			const saneNumber = number.replace(' ', '')
+
+			window.open(`tel:${saneNumber}`)
 		}
 	}
 }
