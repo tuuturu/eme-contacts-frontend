@@ -21,9 +21,7 @@ const mutations = {
 		if (index >= -1) removes = 1
 		else index = 0
 
-		console.log(state.contacts)
 		state.contacts.splice(index, removes, contact)
-		console.log(state.contacts)
 	}
 }
 
