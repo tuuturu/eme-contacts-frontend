@@ -13,6 +13,9 @@ RUN npm run build
 ### Run
 FROM nginx:stable-alpine AS production-stage
 
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
+	ln -sf /dev/stderr /var/log/nginx/error.log
+
 CMD ["entrypoint.sh"]
 
 COPY --from=build-stage /build/scripts/entrypoint.sh /usr/bin/entrypoint.sh
