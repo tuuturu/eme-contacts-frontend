@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import ContactList from '@/views/ContactList'
 import Contact from '@/views/Contact'
+import EditContact from '@/views/EditContact'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ const routes = [
 		path: '/contacts/:id',
 		name: 'ContactView',
 		component: Contact
+	},
+	{
+		path: '/new',
+		name: 'CreateContact',
+		component: EditContact
 	},
 	{
 		path: '/',

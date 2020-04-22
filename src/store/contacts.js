@@ -13,6 +13,17 @@ const state = () => ({
 const mutations = {
 	contacts(state, contacts) {
 		state.contacts = contacts
+	},
+	contact(state, contact) {
+		let index = state.contacts.findIndex((el) => el.id === contact.id)
+		let removes = 0
+
+		if (index >= -1) removes = 1
+		else index = 0
+
+		console.log(state.contacts)
+		state.contacts.splice(index, removes, contact)
+		console.log(state.contacts)
 	}
 }
 
@@ -23,6 +34,23 @@ const actions = {
 		const { data } = await axios.get('/contacts')
 
 		commit('contacts', data)
+	},
+	async saveContact({ dispatch }, contact) {
+		let method = 'post'
+		let url = '/contacts'
+
+		if (contact.id) {
+			method = 'patch'
+			url += `/${contact.id}`
+		}
+
+		const { data } = await axios.request({
+			url,
+			method,
+			data: contact
+		})
+
+		return data
 	},
 	async deleteContact({ dispatch }, { id }) {
 		await axios.delete(`/contacts/${id}`)

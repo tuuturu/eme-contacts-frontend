@@ -1,26 +1,24 @@
 <template>
-	<div class="ContactCard" v-on="$listeners">
+	<div class="ContactCardDummy" v-on="$listeners">
 		<div class="icon">
-			<IconUser alt="profile picture" />
+			<slot />
 		</div>
 
-		<div>{{ contact.first_name }} {{ contact.last_name }}</div>
+		<div>{{ text }}</div>
 	</div>
 </template>
 
 <script>
-import IconUser from '@/components/icons/IconUser'
 export default {
 	name: 'ContactCard',
-	components: { IconUser },
 	props: {
-		contact: Object
+		text: String
 	}
 }
 </script>
 
 <style lang="scss" scoped>
-.ContactCard {
+.ContactCardDummy {
 	height: 56px;
 
 	cursor: pointer;
@@ -35,10 +33,10 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
 
-.IconUser {
-	height: 36px;
-	width: 36px;
+	svg {
+		height: 36px;
+		width: 36px;
+	}
 }
 </style>

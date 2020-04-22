@@ -3,6 +3,11 @@
 		<ContactSearch v-model="query" />
 
 		<ol>
+			<li>
+				<ContactCardDummy text="Add new contact" @click="$router.push('/new')">
+					<IconAdd />
+				</ContactCardDummy>
+			</li>
 			<li v-for="contact in filtered_contacts" :key="contact.id">
 				<ContactCard
 					:contact="contact"
@@ -17,6 +22,8 @@
 import { mapGetters, mapState } from 'vuex'
 import ContactCard from '@/components/ContactCard'
 import ContactSearch from '@/components/ContactSearch'
+import IconAdd from '@/components/icons/IconAdd'
+import ContactCardDummy from '@/components/ContactCardDummy'
 
 function byFirstName(c1, c2) {
 	return c1.first_name - c2.first_name
@@ -24,7 +31,7 @@ function byFirstName(c1, c2) {
 
 export default {
 	name: 'ContactList',
-	components: { ContactSearch, ContactCard },
+	components: { ContactSearch, ContactCard, ContactCardDummy, IconAdd },
 	computed: {
 		...mapGetters('user', ['isAuthenticated']),
 		...mapState('contacts', ['contacts']),
