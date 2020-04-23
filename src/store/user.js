@@ -23,7 +23,8 @@ const getters = {
 }
 
 const actions = {
-	async refresh({ commit }) {
+	async refresh({ commit, state }) {
+		if (getters.isAuthenticated(state)) return
 		let user = null
 
 		try {

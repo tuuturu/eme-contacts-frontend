@@ -2,7 +2,7 @@
 	<div class="Contact">
 		<div class="menu">
 			<IconDelete @click="deleteContact" />
-			<IconEdit />
+			<IconEdit @click="$router.push(`/edit/${contact.id}`)" />
 		</div>
 
 		<IconUser />

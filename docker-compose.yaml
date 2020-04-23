@@ -25,6 +25,7 @@ services:
       LOG_PRETTY_PRINT: 'true'
       ORIGIN_WHITELIST: 'http://localhost:8080'
       REDIS_URI: redis://redis:6379
+      TOKEN_COOKIES_SECURE: 'false'
       UPSTREAMS: >
         contacts-service=http://contacts-service:3000
 

@@ -49,7 +49,6 @@
 
 <script>
 import Vue from 'vue'
-import { mapState } from 'vuex'
 import IconUser from '@/components/icons/IconUser'
 import IconEmail from '@/components/icons/IconEmail'
 import IconCall from '@/components/icons/IconCall'
@@ -79,9 +78,6 @@ function sanitizeObject(obj) {
 export default {
 	name: 'Contact',
 	components: { IconEdit, IconDelete, IconCall, IconEmail, IconUser },
-	computed: {
-		...mapState('contacts', ['contacts'])
-	},
 	data: () => ({
 		saveTimer: null,
 		full_name: '',
@@ -96,12 +92,19 @@ export default {
 	mounted() {
 		new Cleave('.input-phone', { blocks: [3, 2, 3] })
 
-		if (this.$route.params.prefillName)
-			this.full_name = this.$route.params.prefillName
-		if (this.$route.params.prefillPhone)
-			this.contact.phone = this.$route.params.prefillPhone
-		if (this.$route.params.prefillEmail)
-			this.contact.email = this.$route.params.prefillEmail
+		const id = this.$route.params.id
+		if (id) {
+			Vue.set(this, 'contact', this.$store.getters['contacts/contact'](id))
+			this.full_name = `${this.contact.first_name}`
+			if (this.contact.last_name) this.full_name += ` ${this.contact.last_name}`
+		} else {
+			if (this.$route.params.prefillName)
+				this.full_name = this.$route.params.prefillName
+			if (this.$route.params.prefillPhone)
+				this.contact.phone = this.$route.params.prefillPhone
+			if (this.$route.params.prefillEmail)
+				this.contact.email = this.$route.params.prefillEmail
+		}
 	},
 	methods: {
 		save() {

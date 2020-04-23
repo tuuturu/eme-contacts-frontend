@@ -24,6 +24,11 @@ const routes = [
 		component: EditContact
 	},
 	{
+		path: '/edit/:id',
+		name: 'EditContact',
+		component: EditContact
+	},
+	{
 		path: '/',
 		redirect: '/contacts'
 	}

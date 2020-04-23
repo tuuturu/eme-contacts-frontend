@@ -25,7 +25,11 @@ const mutations = {
 	}
 }
 
-const getters = () => ({})
+const getters = {
+	contact: (state) => (id) => {
+		return state.contacts.find((contact) => contact.id === id)
+	}
+}
 
 const actions = {
 	async refresh({ commit }) {
