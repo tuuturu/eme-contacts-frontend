@@ -1,13 +1,12 @@
 <template>
 	<div class="ContactList">
-		<ContactSearch v-model="query" />
+		<ContactSearch
+			v-model="query"
+			:show-action="filtered_contacts.length < 5"
+			@actionClick="addContact"
+		/>
 
 		<ol>
-			<li>
-				<ContactCardDummy text="Add new contact" @click="$router.push('/new')">
-					<IconAdd />
-				</ContactCardDummy>
-			</li>
 			<li v-for="contact in filtered_contacts" :key="contact.id">
 				<ContactCard
 					:contact="contact"
@@ -22,8 +21,6 @@
 import { mapGetters, mapState } from 'vuex'
 import ContactCard from '@/components/ContactCard'
 import ContactSearch from '@/components/ContactSearch'
-import IconAdd from '@/components/icons/IconAdd'
-import ContactCardDummy from '@/components/ContactCardDummy'
 
 function byFirstName(c1, c2) {
 	return c1.first_name - c2.first_name
@@ -31,7 +28,7 @@ function byFirstName(c1, c2) {
 
 export default {
 	name: 'ContactList',
-	components: { ContactSearch, ContactCard, ContactCardDummy, IconAdd },
+	components: { ContactSearch, ContactCard },
 	computed: {
 		...mapGetters('user', ['isAuthenticated']),
 		...mapState('contacts', ['contacts']),
@@ -57,6 +54,18 @@ export default {
 	}),
 	created() {
 		this.$store.dispatch('contacts/refresh')
+	},
+	methods: {
+		addContact() {
+			const params = {}
+
+			if (isNaN(this.query)) {
+				if (this.query.indexOf('@') !== -1) params.prefillEmail = this.query
+				else params.prefillName = this.query
+			} else params.prefillPhone = this.query
+
+			this.$router.push({ name: 'CreateContact', params })
+		}
 	}
 }
 </script>
