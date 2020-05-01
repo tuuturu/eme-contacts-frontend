@@ -36,7 +36,7 @@ export default {
 			return [...this.contacts].sort(this.sort_type)
 		},
 		filtered_contacts() {
-			return this.sorted_contacts.filter((contact) => {
+			return this.sorted_contacts.filter(contact => {
 				let haystack = ''
 
 				if (contact.first_name) haystack += contact.first_name

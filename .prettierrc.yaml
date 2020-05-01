@@ -3,3 +3,5 @@ tabWidth: 2
 semi: false
 singleQuote: true
 useTabs: true
+printWidth: 82
+arrowParens: avoid
