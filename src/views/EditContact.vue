@@ -9,11 +9,11 @@
 
 		<h1>
 			<input
-				v-model="full_name"
+				:value="full_name"
+				@input="setName($event.target.value)"
 				aria-label="full name"
 				placeholder="Jane Doe"
 				type="text"
-				@input="save"
 			/>
 		</h1>
 
@@ -40,54 +40,36 @@
 			/>
 		</div>
 
-		<div class="status-container" v-if="contact.id">
+		<div class="status-container">
 			<span v-if="saveTimer">Saving</span>
-			<span class="success" v-else>Saved</span>
+			<span class="success" v-else-if="contact.id">Saved</span>
 		</div>
 	</div>
 </template>
 
 <script>
 import Vue from 'vue'
+import Cleave from 'cleave.js'
 import IconUser from '@/components/icons/IconUser'
 import IconEmail from '@/components/icons/IconEmail'
 import IconCall from '@/components/icons/IconCall'
 import IconDelete from '@/components/icons/IconDelete'
 import IconEdit from '@/components/icons/IconEdit'
-import Cleave from 'cleave.js'
+import Contact from '@/models/contact'
 
-function cleanName(name) {
-	if (name.indexOf(' ') === -1) return { first_name: name }
-
-	const parts = name.split(' ')
-
-	return {
-		first_name: parts[0],
-		last_name: parts[1]
-	}
-}
-
-function sanitizeObject(obj) {
-	const result = {}
-
-	for (const key in obj) if (obj[key]) result[key] = obj[key]
-
-	return result
-}
+const SAVE_TIMEOUT_MS = 500
 
 export default {
 	name: 'Contact',
 	components: { IconEdit, IconDelete, IconCall, IconEmail, IconUser },
+	computed: {
+		full_name() {
+			return this.contact.fullName()
+		}
+	},
 	data: () => ({
 		saveTimer: null,
-		full_name: '',
-		contact: {
-			id: '',
-			first_name: '',
-			last_name: '',
-			email: '',
-			phone: ''
-		}
+		contact: new Contact()
 	}),
 	mounted() {
 		new Cleave('.input-phone', { blocks: [3, 2, 3] })
@@ -95,39 +77,42 @@ export default {
 		const id = this.$route.params.id
 		if (id) {
 			Vue.set(this, 'contact', this.$store.getters['contacts/contact'](id))
-			this.full_name = `${this.contact.first_name}`
-			if (this.contact.last_name) this.full_name += ` ${this.contact.last_name}`
-		} else {
-			if (this.$route.params.prefillName)
-				this.full_name = this.$route.params.prefillName
-			if (this.$route.params.prefillPhone)
-				this.contact.phone = this.$route.params.prefillPhone
-			if (this.$route.params.prefillEmail)
-				this.contact.email = this.$route.params.prefillEmail
+
+			return
 		}
+
+		if (this.$route.params.prefillName)
+			this.contact.setName(this.$route.params.prefillName)
+		if (this.$route.params.prefillPhone)
+			this.contact.phone = this.$route.params.prefillPhone
+		if (this.$route.params.prefillEmail)
+			this.contact.email = this.$route.params.prefillEmail
 	},
 	methods: {
+		setName(name) {
+			if (name.charAt(name.length - 1) === ' ') return
+			console.log(`Setting name ${name}`)
+
+			this.contact.setName(name)
+
+			this.save()
+		},
 		save() {
 			if (this.saveTimer) clearTimeout(this.saveTimer)
 
 			this.saveTimer = setTimeout(async () => {
-				this.contact = Object.assign(this.contact, cleanName(this.full_name))
-				this.contact = sanitizeObject(this.contact)
-
 				const newContactObject = await this.$store.dispatch(
 					'contacts/saveContact',
-					this.contact
+					this.contact.serialize()
 				)
 
-				Vue.set(this, 'contact', newContactObject)
+				this.contact.id = newContactObject.id
 
 				this.saveTimer = null
-			}, 500)
+			}, SAVE_TIMEOUT_MS)
 		},
 		deleteContact() {
-			const answer = confirm(
-				`Are you sure you want to delete ${this.full_name}?`
-			)
+			const answer = confirm(`Are you sure you want to delete ${this.full_name}?`)
 
 			if (!answer) return
 
