@@ -91,7 +91,6 @@ export default {
 	methods: {
 		setName(name) {
 			if (name.charAt(name.length - 1) === ' ') return
-			console.log(`Setting name ${name}`)
 
 			this.contact.setName(name)
 
