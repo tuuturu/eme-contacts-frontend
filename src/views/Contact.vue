@@ -1,7 +1,6 @@
 <template>
 	<div class="Contact">
 		<div class="menu">
-			<IconDelete @click="deleteContact" />
 			<IconEdit @click="$router.push(`/edit/${contact.id}`)" />
 		</div>
 
@@ -38,7 +37,6 @@ import { mapState } from 'vuex'
 import IconUser from '@/components/icons/IconUser'
 import IconEmail from '@/components/icons/IconEmail'
 import IconCall from '@/components/icons/IconCall'
-import IconDelete from '@/components/icons/IconDelete'
 import IconEdit from '@/components/icons/IconEdit'
 
 function ensureList(item) {
@@ -73,7 +71,7 @@ function sanitizePhone(number) {
 
 export default {
 	name: 'Contact',
-	components: { IconEdit, IconDelete, IconCall, IconEmail, IconUser },
+	components: { IconEdit, IconCall, IconEmail, IconUser },
 	computed: {
 		...mapState('contacts', ['contacts']),
 		contact() {
@@ -87,16 +85,6 @@ export default {
 		sanitizePhone
 	}),
 	methods: {
-		deleteContact() {
-			const full_name = `${this.contact.first_name} ${this.contact.last_name}`
-			const answer = confirm(`Are you sure you want to delete ${full_name}`)
-
-			if (!answer) return
-
-			this.$store.dispatch('contacts/deleteContact', { id: this.contact.id })
-
-			this.$router.push('/contacts')
-		},
 		call(number) {
 			const saneNumber = number.replace(' ', '')
 
@@ -128,7 +116,7 @@ h1 {
 	text-align: left;
 
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 
 	svg {
 		margin: 0.5em;
