@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import config from '@/app.config'
+import Contact from '@/models/contact'
 
 const axios = Axios.create({
 	baseURL: config.VUE_APP_UPSTREAM_URL,
@@ -15,7 +16,7 @@ const mutations = {
 		state.contacts = contacts
 	},
 	contact(state, contact) {
-		let index = state.contacts.findIndex((el) => el.id === contact.id)
+		let index = state.contacts.findIndex(el => el.id === contact.id)
 		let removes = 0
 
 		if (index >= -1) removes = 1
@@ -26,8 +27,8 @@ const mutations = {
 }
 
 const getters = {
-	contact: (state) => (id) => {
-		return state.contacts.find((contact) => contact.id === id)
+	contact: state => id => {
+		return state.contacts.find(contact => contact.id === id)
 	}
 }
 
@@ -35,7 +36,9 @@ const actions = {
 	async refresh({ commit }) {
 		const { data } = await axios.get('/contacts')
 
-		commit('contacts', data)
+		const contacts = data.map(contact => new Contact(contact))
+
+		commit('contacts', contacts)
 	},
 	async saveContact({ dispatch }, contact) {
 		let method = 'post'
