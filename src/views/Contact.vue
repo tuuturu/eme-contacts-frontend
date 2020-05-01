@@ -27,7 +27,7 @@
 			:key="email"
 		>
 			<IconEmail class="icon" />
-			<p>{{ email }}</p>
+			<a class="email-link" :href="`mailto:${email}`">{{ email }}</a>
 		</div>
 	</div>
 </template>
@@ -60,12 +60,7 @@ function sanitizePhone(number) {
 	}
 
 	return (
-		result +
-		number.slice(0, 3) +
-		' ' +
-		number.slice(3, 6) +
-		' ' +
-		number.slice(6)
+		result + number.slice(0, 3) + ' ' + number.slice(3, 6) + ' ' + number.slice(6)
 	)
 }
 
@@ -75,9 +70,7 @@ export default {
 	computed: {
 		...mapState('contacts', ['contacts']),
 		contact() {
-			return this.contacts.find(
-				(contact) => contact.id === this.$route.params.id
-			)
+			return this.contacts.find(contact => contact.id === this.$route.params.id)
 		}
 	},
 	data: () => ({
@@ -143,5 +136,10 @@ h1 {
 	align-items: center;
 
 	cursor: pointer;
+}
+
+.email-link {
+	text-decoration: none;
+	color: black;
 }
 </style>
